@@ -5,6 +5,8 @@ PROJECT_NAME = ft_malloc
 NAME = ${PROJECT_NAME}.a
 
 SRC = src/main.c\
+		src/utils.c\
+		src/ft_malloc.c\
 
 OBJ = ${SRC:.c=.o}
 
