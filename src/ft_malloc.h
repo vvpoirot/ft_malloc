@@ -15,6 +15,14 @@ typedef struct s_block {
 	struct s_block *prev;
 }	t_block;
 
+typedef struct s_heap {
+	t_block *tiny_alloc;
+	t_block *small_alloc;
+	t_block *large_alloc;
+}	t_heap;
+
+static t_heap g_heap;
+
 # define HEADER_SIZE ALIGN(sizeof(t_block))
 
 # define TINY 128 // n (1 to n)
