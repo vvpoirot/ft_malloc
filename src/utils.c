@@ -1,5 +1,18 @@
 #include "ft_malloc.h"
 
+int	ft_blocksize(t_block *block)
+{
+	size_t	size;
+
+	size = 0;
+	while (block != 0)
+	{
+		block = block->next;
+		size++;
+	}
+	return (size);
+}
+
 void* private_mmap(size_t zone_size) {
 	size_t page_size;
 

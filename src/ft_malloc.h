@@ -30,7 +30,11 @@ static t_heap g_heap;
 # define ZONE_TINY (100 * (TINY + HEADER_SIZE)) // N
 # define ZONE_SMALL (100 * (SMALL + HEADER_SIZE)) // M
 
-void* private_mmap(size_t zone_size);
-void* ft_malloc(size_t size);
+// main functions
+void*	ft_malloc(size_t size);
+
+// utils functions
+int		ft_blocksize(t_block *block);
+void*	private_mmap(size_t zone_size);
 
 #endif
