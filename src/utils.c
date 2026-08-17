@@ -60,3 +60,42 @@ t_block *add_block(t_block *list, t_block *block) {
 	block->prev = last;
 	return (list);
 }
+
+bool	merge_block(size_t zone_size, t_block **target_block) {
+	t_block *block = *target_block;
+	void 	*zone_start = (void *)((uintptr_t)block & ~(zone_size- 1));
+	void 	*zone_end = (char *)zone_start + zone_size;
+
+	if (block->next && (void *)block->next < zone_end && block->next->is_free == FREE) {
+		block->size += sizeof(t_block) + block->next->size;
+		block->next = block->next->next;
+		if (block->next)
+			block->next->prev = block;
+	}
+
+	if (block->prev && (void *)block->prev >= zone_start && block->prev->is_free == FREE) {
+		block->prev->size += sizeof(t_block) + block->size;
+		block->prev->next = block->next;
+		if (block->next)
+			block->next->prev = block->prev;
+		block = block->prev;
+	}
+
+	*target_block = block;
+
+	if (block->size == zone_size - HEADER_SIZE) {
+		if (block->prev)
+            block->prev->next = block->next;
+        else {
+            if (zone_size == ZONE_TINY)
+                g_heap.tiny_alloc = block->next;
+            else if (zone_size == ZONE_SMALL)
+                g_heap.small_alloc = block->next;
+        }
+        if (block->next)
+            block->next->prev = block->prev;
+
+        return (false);
+	}
+	return (true);
+}

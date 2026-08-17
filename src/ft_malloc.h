@@ -8,6 +8,8 @@
 // temp
 # include <stdio.h>
 # include <string.h>
+# include <stdint.h>
+# include <stdbool.h>
 
 # define FREE 1
 # define NOTFREE 0
@@ -28,6 +30,7 @@ typedef struct s_heap {
 	t_block *tiny_alloc;
 	t_block *small_alloc;
 	t_block *large_alloc;
+
 }	t_heap;
 
 extern t_heap g_heap;
@@ -40,12 +43,15 @@ extern t_heap g_heap;
 # define ZONE_SMALL ALIGN_TO_PAGE((100 * (SMALL + HEADER_SIZE))) // M
  
 // main functions
+void		show_alloc_mem();
+void 		ft_free(void *ptr);
 void		*ft_malloc(size_t size);
 
 // utils functions
 t_block 	*add_block(t_block *list, t_block *block);
 void		split_in_new_block(t_block **block, size_t size);
 size_t		alloc_new_block(size_t zone_size, t_block **block);
+bool		merge_block(size_t zone_size, t_block **target_block);
 t_block 	*get_available_block(t_block *start, size_t req_size);
 
 #endif

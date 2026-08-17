@@ -4,6 +4,7 @@ t_heap g_heap;
 
 void* ft_malloc(size_t size) {
 	size_t alignee_size = ALIGN(size);
+	ft_printf("%d // %d\n", ZONE_TINY, ZONE_SMALL);
 
 	if (alignee_size <= TINY) {
 		
@@ -20,7 +21,7 @@ void* ft_malloc(size_t size) {
 
 		}
 		block->is_free = NOTFREE;
-		split_in_new_block(&block, size); 
+		split_in_new_block(&block, alignee_size); 
 		// printf("%zu // %zu // %d \n", block->size, block->next->size, block->next->is_free);
 
 		return ((char *)block + HEADER_SIZE);
@@ -41,7 +42,7 @@ void* ft_malloc(size_t size) {
 
 		}
 		block->is_free = NOTFREE;
-		split_in_new_block(&block, size); 
+		split_in_new_block(&block, alignee_size); 
 		// printf("%zu // %zu // %d \n", block->size, block->next->size, block->next->is_free);
 
 		return ((char *)block + HEADER_SIZE);

@@ -7,6 +7,8 @@ NAME = ${PROJECT_NAME}.a
 SRC = src/main.c\
 		src/utils.c\
 		src/ft_malloc.c\
+		src/show_alloc_mem.c\
+		src/ft_free.c\
 
 OBJ = ${SRC:.c=.o}
 
