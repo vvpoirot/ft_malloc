@@ -9,6 +9,7 @@ SRC = src/main.c\
 		src/ft_malloc.c\
 		src/show_alloc_mem.c\
 		src/ft_free.c\
+		src/ft_realloc.c\
 
 OBJ = ${SRC:.c=.o}
 

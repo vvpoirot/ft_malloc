@@ -3,6 +3,8 @@
 int main() {
 	char *str = (char *)ft_malloc(240);
 	char *str2 = (char *)ft_malloc(140);
+	char *str3 = (char *)ft_malloc(1025);
+	char *str4 = (char *)ft_malloc(55);
 
 	if (!str)
 	{
@@ -16,12 +18,30 @@ int main() {
 		return (1);
 	}
 
-	printf("✅ Succès : %s (Adresse : %p)\n", str, (void *)str);
-	printf("✅ Succès : %s (Adresse : %p)\n", str2, (void *)str2);
+	if (!str3)
+	{
+		printf("❌ Failled on str3 \n");
+		return (1);
+	}
+	
+	if (!str4)
+	{
+		printf("❌ Failled on str4 \n");
+		return (1);
+	}
+
+	ft_realloc(str2, 48);
+
+	show_alloc_mem();
+	ft_printf("\n");
+	
+	ft_free(str);
+	ft_free(str3);
+	ft_free(str4);
 	
 	show_alloc_mem();
-
-	ft_free(str);
+	ft_printf("\n");
+	
 	ft_free(str2);
 
 	show_alloc_mem();

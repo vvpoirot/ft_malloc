@@ -46,6 +46,7 @@ extern t_heap g_heap;
 void		show_alloc_mem();
 void 		ft_free(void *ptr);
 void		*ft_malloc(size_t size);
+void		*ft_realloc(void *ptr, size_t size);
 
 // utils functions
 t_block 	*add_block(t_block *list, t_block *block);

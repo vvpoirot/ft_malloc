@@ -32,9 +32,8 @@ void ft_free(void *ptr) {
 		if (block->next)
 			block->next->prev = block->prev;
 
-		size_t total_size = sizeof(t_block) + block->size;
-		size_t mmap_size = ALIGN_TO_PAGE(total_size);
-		munmap((void *)block, mmap_size);
+		size_t total_size = HEADER_SIZE + block->size;
+		munmap((void *)block, total_size);
 		return;	
 	}
 

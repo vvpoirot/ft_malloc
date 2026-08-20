@@ -4,7 +4,6 @@ t_heap g_heap;
 
 void* ft_malloc(size_t size) {
 	size_t alignee_size = ALIGN(size);
-	ft_printf("%d // %d\n", ZONE_TINY, ZONE_SMALL);
 
 	if (alignee_size <= TINY) {
 		
@@ -60,7 +59,7 @@ void* ft_malloc(size_t size) {
 
 		g_heap.large_alloc = add_block(g_heap.large_alloc, new_block);
 
-		return (new_block);
+		return ((char *)new_block + HEADER_SIZE);
 	}
 	return (NULL);
 }
