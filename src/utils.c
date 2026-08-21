@@ -67,14 +67,14 @@ bool	merge_block(size_t zone_size, t_block **target_block) {
 	void 	*zone_end = (char *)zone_start + zone_size;
 
 	if (block->next && (void *)block->next < zone_end && block->next->is_free == FREE) {
-		block->size += sizeof(t_block) + block->next->size;
+		block->size += HEADER_SIZE + block->next->size;
 		block->next = block->next->next;
 		if (block->next)
 			block->next->prev = block;
 	}
 
 	if (block->prev && (void *)block->prev >= zone_start && block->prev->is_free == FREE) {
-		block->prev->size += sizeof(t_block) + block->size;
+		block->prev->size += HEADER_SIZE + block->size;
 		block->prev->next = block->next;
 		if (block->next)
 			block->next->prev = block->prev;

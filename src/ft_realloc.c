@@ -1,6 +1,7 @@
 #include "ft_malloc.h"
 
 static bool same_zone(size_t new, size_t current);
+static bool in_mmap_zone(t_block* block, size_t zone_size);
 
 void	*ft_realloc(void *ptr, size_t size) {
 	t_block *block;
@@ -12,7 +13,7 @@ void	*ft_realloc(void *ptr, size_t size) {
 	block = (t_block *)((char *)ptr - HEADER_SIZE);
 
 	// /!\ NE PAS LINK SI LE BLOCK SUIVANT APPARTIENS A UN AUTRE MMAP SINON CRASH AU NIVEAU DE FREE
-	if (same_zone(alignee_size, block->size) && block->next->is_free == FREE && (block->next->size + block->size + HEADER_SIZE) >= alignee_size)
+	if (in_mmap_zone(block, ZONE_TINY) && same_zone(alignee_size, block->size) && block->next->is_free == FREE && (block->next->size + block->size + HEADER_SIZE) >= alignee_size)
 	{
 		ft_printf("Hello World !\n");
 	}
@@ -21,13 +22,21 @@ void	*ft_realloc(void *ptr, size_t size) {
 		void* new_pointer;
 
 		new_pointer = ft_malloc(alignee_size);
-		new_pointer = ft_memcpy(new_pointer, ptr, block->size);
+		new_pointer = ft_memcpy(new_pointer, ptr, alignee_size);
 		ft_free(ptr);
 
 		return (new_pointer);
 	}
 
 	return (NULL);
+}
+
+static bool in_mmap_zone(t_block* block, size_t zone_size) {
+	void 	*zone_start = (void *)((uintptr_t)block & ~(zone_size- 1));
+	void 	*zone_end = (char *)zone_start + zone_size;
+	if (block && (void *)block < zone_end && (void *)block >= zone_start)
+		return (true);
+	return (false);
 }
 
 static bool same_zone(size_t new, size_t current) {

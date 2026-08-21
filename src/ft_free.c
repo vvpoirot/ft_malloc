@@ -7,7 +7,6 @@ void ft_free(void *ptr) {
 		return ;
 
 	block = (t_block *)((char *)ptr - HEADER_SIZE);
-
 	block->is_free = FREE;
 
 	void	*zone_start; // uintptr_t automatically matches the pointer size (64-bit on x86_64/ARM64, 32-bit on x86)

@@ -30,7 +30,9 @@ int main() {
 		return (1);
 	}
 
-	ft_realloc(str2, 48);
+	show_alloc_mem();
+	str2 = ft_realloc(str2, 48);
+	ft_printf("\n");
 
 	show_alloc_mem();
 	ft_printf("\n");
