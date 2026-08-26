@@ -41,7 +41,7 @@ void* ft_malloc(size_t size) {
 
 		}
 		block->is_free = NOTFREE;
-		split_in_new_block(&block, alignee_size); 
+		split_in_new_block(&block, alignee_size);
 		// printf("%zu // %zu // %d \n", block->size, block->next->size, block->next->is_free);
 
 		return ((char *)block + HEADER_SIZE);
@@ -51,7 +51,7 @@ void* ft_malloc(size_t size) {
 		size_t large_alignee_size = ALIGN(size) + HEADER_SIZE;
 		size_t mmap_size = (large_alignee_size + (PAGESIZE - 1)) & ~(PAGESIZE - 1);
 
-		t_block *new_block = mmap(0, mmap_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+		t_block *new_block = use_mmap(mmap_size);
 		if (!new_block || new_block == MAP_FAILED)
 			return (NULL);
 		new_block->size = mmap_size - HEADER_SIZE;

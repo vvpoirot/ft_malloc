@@ -1,5 +1,10 @@
 #include "ft_malloc.h"
 
+void *use_mmap(size_t size) {
+	void *ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	return (ptr);
+}
+
 t_block *get_available_block(t_block *start, size_t req_size) {
 	t_block *current = start;
 
@@ -37,7 +42,7 @@ size_t	alloc_new_block(size_t zone_size, t_block **block) {
 	t_block *new_block;
 
 	new_block = *block;
-	new_block = mmap(0, zone_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	new_block = use_mmap(zone_size);
 
 	if (!new_block || new_block == MAP_FAILED)
 		return (0);
@@ -62,9 +67,21 @@ t_block *add_block(t_block *list, t_block *block) {
 }
 
 bool	merge_block(size_t zone_size, t_block **target_block) {
+	void 	*zone_end;
+	void 	*zone_start;
 	t_block *block = *target_block;
-	void 	*zone_start = (void *)((uintptr_t)block & ~(zone_size- 1));
-	void 	*zone_end = (char *)zone_start + zone_size;
+
+	if (zone_size == ZONE_TINY) {
+		zone_start = (void *)g_heap.tiny_alloc;
+		while ((void *)block >= zone_start + ZONE_TINY)
+			zone_start += ZONE_TINY;
+		zone_end = zone_start + ZONE_TINY;
+	} else if (zone_size == ZONE_SMALL) {
+		zone_start = (void *)g_heap.small_alloc;
+		while ((void *)block >= zone_start + ZONE_SMALL)
+			zone_start += ZONE_SMALL;
+		zone_end = zone_start + ZONE_SMALL;
+	}
 
 	while (block->next && (void *)block->next < zone_end && block->next->is_free == FREE) {
 		block->size += HEADER_SIZE + block->next->size;

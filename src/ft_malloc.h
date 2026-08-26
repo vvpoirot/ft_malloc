@@ -48,6 +48,7 @@ void		*ft_malloc(size_t size);
 void		*ft_realloc(void *ptr, size_t size);
 
 // utils functions
+void 		*use_mmap(size_t size);
 t_block 	*add_block(t_block *list, t_block *block);
 void		split_in_new_block(t_block **block, size_t size);
 size_t		alloc_new_block(size_t zone_size, t_block **block);
