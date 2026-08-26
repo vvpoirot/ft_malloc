@@ -17,7 +17,6 @@
 # define PAGESIZE sysconf(_SC_PAGESIZE)
 # define ALIGNMENT 16
 # define ALIGN(size) (((size) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1))
-# define ALIGN_TO_PAGE(zone_size) (((zone_size / PAGESIZE) + 1) * PAGESIZE)
 
 typedef struct s_block {
 	size_t	size;
@@ -39,8 +38,8 @@ extern t_heap g_heap;
 
 # define TINY 128 // n (1 to n)
 # define SMALL 1024 // m (n + 1 to m)
-# define ZONE_TINY ALIGN_TO_PAGE((100 * (TINY + HEADER_SIZE))) // N
-# define ZONE_SMALL ALIGN_TO_PAGE((100 * (SMALL + HEADER_SIZE))) // M
+# define ZONE_TINY (32 * 1024) // N
+# define ZONE_SMALL (128 * 1024) // M
  
 // main functions
 void		show_alloc_mem();

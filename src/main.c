@@ -1,56 +1,66 @@
 #include "ft_malloc.h"
 
 int main() {
-	char *str = (char *)ft_malloc(240);
-	char *str2 = (char *)ft_malloc(140);
-	char *str3 = (char *)ft_malloc(1025);
-	char *str4 = (char *)ft_malloc(55);
+    printf("==================================================\n");
+    printf("TEST 1: 120 alloc TINY (64 octets)\n");
+    printf("==================================================\n");
 
-	if (!str)
-	{
-		printf("❌ Failled on str \n");
-		return (1);
-	}
+    char *ptrs_one[150];
+    for (int i = 0; i < 150; i++) {
+        ptrs_one[i] = (char *)ft_malloc(64); // <= 128 -> TINY
+        if (!ptrs_one[i]) {
+            printf("❌ Failed on ptrs_one[%d]\n", i);
+            return (1);
+        }
+        memset(ptrs_one[i], 'A' + (i % 26), 64);
+    }
 
-	if (!str2)
-	{
-		printf("❌ Failled on str2 \n");
-		return (1);
-	}
+    show_alloc_mem();
 
-	if (!str3)
-	{
-		printf("❌ Failled on str3 \n");
-		return (1);
-	}
-	
-	if (!str4)
-	{
-		printf("❌ Failled on str4 \n");
-		return (1);
-	}
+    printf("\n==================================================\n");
+    printf("TEST 2: 20 alloc SMALL (512 octets)\n");
+    printf("==================================================\n");
 
-	show_alloc_mem();
-	str2 = ft_realloc(str2, 48);
-	ft_printf("\n");
+    char *ptrs_two[20];
+    for (int i = 0; i < 20; i++) {
+        ptrs_two[i] = (char *)ft_malloc(512); // > 128 && <= 1024 -> SMALL
+        if (!ptrs_two[i]) {
+            printf("❌ Failed on ptrs_two[%d]\n", i);
+            return (1);
+        }
+        memset(ptrs_two[i], 'B' + (i % 26), 512);
+    }
 
-	show_alloc_mem();
-	str2 = ft_realloc(str, 140);
-	ft_printf("\n");
+    show_alloc_mem();
 
-	show_alloc_mem();
-	ft_printf("\n");
-	
-	ft_free(str);
-	ft_free(str3);
-	ft_free(str4);
-	
-	show_alloc_mem();
-	ft_printf("\n");
-	
-	ft_free(str2);
+    printf("\n==================================================\n");
+    printf("TEST 3: Free and Realloc (TINY to LARGE)\n");
+    printf("==================================================\n");
 
-	show_alloc_mem();
+    for (int i = 0; i < 150; i += 2) {
+        ft_free(ptrs_one[i]);
+        ptrs_one[i] = NULL;
+    }
 
-	return (0);
+    show_alloc_mem();
+
+    // ptrs_one[1] = ft_realloc(ptrs_one[1], 2048);
+    show_alloc_mem();
+
+    printf("\n==================================================\n");
+    printf("TEST 4: Free every alloc\n");
+    printf("==================================================\n");
+
+    for (int i = 1; i < 150; i += 2) {
+        if (ptrs_one[i])
+            ft_free(ptrs_one[i]);
+    }
+
+    for (int i = 0; i < 20; i++) {
+        ft_free(ptrs_two[i]);
+    }
+
+    show_alloc_mem();
+
+    printf("\n✅ ALL TEST PASSED !\n");
 }

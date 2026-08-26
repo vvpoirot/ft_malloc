@@ -15,17 +15,30 @@ void	*ft_realloc(void *ptr, size_t size) {
 	if (in_mmap_zone(block) && same_zone(alignee_size, block->size) && block->next->is_free == FREE && (block->next->size + block->size + HEADER_SIZE) >= alignee_size)
 	{
 		size_t old_size = block->size;
+		size_t old_next_size = block->next->size;
+
+		t_block *new_next_block = (t_block *)((char *)block + HEADER_SIZE + alignee_size);
+		new_next_block->is_free = FREE;
+		new_next_block->size = (old_size + old_next_size) - alignee_size;
+		new_next_block->next = block->next->next;
+		new_next_block->prev = block;
+
 		block->size = alignee_size;
-		block->next = (t_block *)((char *)block + HEADER_SIZE + alignee_size);
-		block->next->is_free = FREE;
-		block->next->size = (old_size + block->next->size) - alignee_size;
+		block->next = new_next_block;
+		if (new_next_block->next)
+			new_next_block->next->prev = new_next_block;
+
+		return ((char *)block + HEADER_SIZE);
 	}
 	else
 	{
 		void* new_pointer;
 
 		new_pointer = ft_malloc(alignee_size);
-		new_pointer = ft_memcpy(new_pointer, ptr, alignee_size);
+		if (!new_pointer)
+			return (NULL);
+		size_t copy_size = (block->size < alignee_size) ? block->size : alignee_size;
+		ft_memcpy(new_pointer, ptr, copy_size);
 		ft_free(ptr);
 
 		return (new_pointer);

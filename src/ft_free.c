@@ -9,18 +9,13 @@ void ft_free(void *ptr) {
 	block = (t_block *)((char *)ptr - HEADER_SIZE);
 	block->is_free = FREE;
 
-	void	*zone_start; // uintptr_t automatically matches the pointer size (64-bit on x86_64/ARM64, 32-bit on x86)
 	if (block->size <= TINY) {
-		if (!merge_block(ZONE_TINY, &block)) {
-			zone_start = (void *)((uintptr_t)block & ~(ZONE_TINY- 1));
-			munmap(zone_start, ZONE_TINY);
-		}
+		if (!merge_block(ZONE_TINY, &block))
+			munmap((void *)block, ZONE_TINY);
 	}
 	else if (block->size <= SMALL) {
-		if (!merge_block(ZONE_SMALL, &block)) {
-			zone_start = (void *)((uintptr_t)block & ~(ZONE_SMALL- 1));
-			munmap(zone_start, ZONE_SMALL);
-		}
+		if (!merge_block(ZONE_SMALL, &block))
+			munmap((void *)block, ZONE_SMALL);
 	}
 	else {
 		if (block->prev)
