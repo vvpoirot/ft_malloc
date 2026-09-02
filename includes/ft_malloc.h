@@ -43,9 +43,9 @@ extern t_heap g_heap;
  
 // main functions
 void		show_alloc_mem();
-void 		ft_free(void *ptr);
-void		*ft_malloc(size_t size);
-void		*ft_realloc(void *ptr, size_t size);
+void 		free(void *ptr);
+void		*malloc(size_t size);
+void		*realloc(void *ptr, size_t size);
 
 // utils functions
 void 		*use_mmap(size_t size);

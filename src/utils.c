@@ -1,4 +1,4 @@
-#include "ft_malloc.h"
+#include "../includes/ft_malloc.h"
 
 void *use_mmap(size_t size) {
 	void *ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);

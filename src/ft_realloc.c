@@ -1,13 +1,14 @@
-#include "ft_malloc.h"
+#include "../includes/ft_malloc.h"
 
 static bool same_zone(size_t new, size_t current);
 static bool in_mmap_zone(t_block* block);
 
-void	*ft_realloc(void *ptr, size_t size) {
+void	*realloc(void *ptr, size_t size) {
 	t_block *block;
 
 	if (!ptr)
-		return(NULL);
+		return (malloc(size));
+
 	size_t alignee_size = ALIGN(size);
 
 	block = (t_block *)((char *)ptr - HEADER_SIZE);
@@ -34,12 +35,13 @@ void	*ft_realloc(void *ptr, size_t size) {
 	{
 		void* new_pointer;
 
-		new_pointer = ft_malloc(alignee_size);
+		new_pointer = malloc(alignee_size);
 		if (!new_pointer)
 			return (NULL);
+
 		size_t copy_size = (block->size < alignee_size) ? block->size : alignee_size;
 		ft_memcpy(new_pointer, ptr, copy_size);
-		ft_free(ptr);
+		free(ptr);
 
 		return (new_pointer);
 	}

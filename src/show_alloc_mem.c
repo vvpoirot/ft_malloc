@@ -1,4 +1,4 @@
-#include "ft_malloc.h"
+#include "../includes/ft_malloc.h"
 
 void show_alloc_mem() {
 	t_block *tiny = g_heap.tiny_alloc;

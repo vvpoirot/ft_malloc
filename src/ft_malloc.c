@@ -1,8 +1,11 @@
-#include "ft_malloc.h"
+#include "../includes/ft_malloc.h"
 
 t_heap g_heap;
 
-void* ft_malloc(size_t size) {
+void* malloc(size_t size) {
+	// ft_putstr("MY MALLOC\n", ft_strlen("MY MALLOC\n"));
+	// ft_putnbr_fd(size, 1);
+	// write(1, "\n", 1);
 	size_t alignee_size = ALIGN(size);
 
 	if (alignee_size <= TINY) {
@@ -20,8 +23,7 @@ void* ft_malloc(size_t size) {
 
 		}
 		block->is_free = NOTFREE;
-		split_in_new_block(&block, alignee_size); 
-		// printf("%zu // %zu // %d \n", block->size, block->next->size, block->next->is_free);
+		split_in_new_block(&block, alignee_size);
 
 		return ((char *)block + HEADER_SIZE);
 
@@ -42,7 +44,6 @@ void* ft_malloc(size_t size) {
 		}
 		block->is_free = NOTFREE;
 		split_in_new_block(&block, alignee_size);
-		// printf("%zu // %zu // %d \n", block->size, block->next->size, block->next->is_free);
 
 		return ((char *)block + HEADER_SIZE);
 
@@ -52,8 +53,10 @@ void* ft_malloc(size_t size) {
 		size_t mmap_size = (large_alignee_size + (PAGESIZE - 1)) & ~(PAGESIZE - 1);
 
 		t_block *new_block = use_mmap(mmap_size);
-		if (!new_block || new_block == MAP_FAILED)
+		if (!new_block || new_block == MAP_FAILED) {
+			write(2, "LARGE FAILED\n", 13);
 			return (NULL);
+		}
 		new_block->size = mmap_size - HEADER_SIZE;
 		new_block->is_free = NOTFREE;
 

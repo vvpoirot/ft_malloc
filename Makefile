@@ -1,40 +1,56 @@
-LIBFT = ./libft/libft.a
+# CONFIG :
 
-PROJECT_NAME = ft_malloc
+ifeq ($(HOSTTYPE),)
+HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
 
-NAME = ${PROJECT_NAME}.a
+NAME		= libft_malloc_$(HOSTTYPE).so
+LINK		= libft_malloc.so
 
-SRC = src/main.c\
-		src/utils.c\
-		src/ft_malloc.c\
-		src/show_alloc_mem.c\
-		src/ft_free.c\
-		src/ft_realloc.c\
+LIBFT_DIR	= ./libft
+LIBFT		= $(LIBFT_DIR)/libft.a
 
-OBJ = ${SRC:.c=.o}
+SRC			= src/utils.c \
+			  src/ft_malloc.c \
+			  src/show_alloc_mem.c \
+			  src/ft_free.c \
+			  src/ft_realloc.c
 
-CFLAGS = -Wall -Wextra -Werror
+OBJ			= $(SRC:.c=.o)
 
-CC = @cc ${CFLAGS}
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror -fPIC
+LDFLAGS		= -shared
 
-all: ${NAME} ${OBJ}
+# RULES :
 
-$(NAME): ${OBJ}
-	@printf "Loading\r"
-	@${MAKE} -C ./libft
-	@cp libft/libft.a ${NAME}
-	@ar rc ${NAME} ${OBJ}
-	@${CC} ${SRC} ${LIBFT} -o ${PROJECT_NAME}
-	@printf "Finish !\n"
+all: $(NAME) $(LINK)
+
+$(NAME): $(OBJ) $(LIBFT)
+	@printf "Linking $(NAME)...\n"
+	@$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LIBFT)
+
+$(LIBFT):
+	@printf "Compiling libft...\n"
+	@$(MAKE) -C $(LIBFT_DIR)
+
+$(LINK): $(NAME)
+	@ln -sf $(NAME) $(LINK)
+	@printf "$(LINK) -> $(NAME)\n"
+
+%.o: %.c
+	@printf "Compiling $<...\n"
+	@$(CC) $(CFLAGS) -I$(LIBFT_DIR) -c $< -o $@
 
 clean:
-	@${MAKE} clean -C ./libft
-	@rm -f src/*.o
+	@$(MAKE) -C $(LIBFT_DIR) clean
+	@rm -f $(OBJ)
 
 fclean: clean
-	@${MAKE} fclean -C ./libft
-	@rm -f ${NAME}
-	@rm -f ${PROJECT_NAME}
-	@printf "Delete files !\n"
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@rm -f $(NAME)
+	@rm -f $(LINK)
 
 re: fclean all
+
+.PHONY: all clean fclean re

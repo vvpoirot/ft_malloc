@@ -1,6 +1,6 @@
-#include "ft_malloc.h"
+#include "../includes/ft_malloc.h"
 
-void ft_free(void *ptr) {
+void free(void *ptr) {
 	t_block *block;
 
 	if (!ptr)
