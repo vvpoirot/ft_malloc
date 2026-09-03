@@ -51,7 +51,6 @@ void* malloc(size_t size) {
 
 		t_block *new_block = use_mmap(mmap_size);
 		if (!new_block || new_block == MAP_FAILED) {
-			write(2, "LARGE FAILED\n", 13);
 			return (NULL);
 		}
 		new_block->size = mmap_size - HEADER_SIZE;
