@@ -8,6 +8,10 @@ void	*realloc(void *ptr, size_t size) {
 
 	if (!ptr)
 		return (malloc(size));
+	else if (size == 0) {
+		free(ptr);
+		return (NULL);
+	}
 
 	size_t alignee_size = ALIGN(size);
 

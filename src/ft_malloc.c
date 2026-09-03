@@ -3,9 +3,6 @@
 t_heap g_heap;
 
 void* malloc(size_t size) {
-	// ft_putstr("MY MALLOC\n", ft_strlen("MY MALLOC\n"));
-	// ft_putnbr_fd(size, 1);
-	// write(1, "\n", 1);
 	size_t alignee_size = ALIGN(size);
 
 	if (alignee_size <= TINY) {

@@ -7,6 +7,10 @@ void free(void *ptr) {
 		return ;
 
 	block = (t_block *)((char *)ptr - HEADER_SIZE);
+	if (block && block->is_free == FREE) {
+		ft_putstr_fd("free(): double free detected\n", 2);
+		exit(EXIT_FAILURE);
+	}
 	block->is_free = FREE;
 
 	if (block->size <= TINY) {
@@ -28,7 +32,7 @@ void free(void *ptr) {
 
 		size_t total_size = HEADER_SIZE + block->size;
 		munmap((void *)block, total_size);
-		return;	
 	}
 
+	return;
 }
