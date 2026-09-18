@@ -101,6 +101,9 @@ bool	merge_block(size_t zone_size, t_block **target_block) {
 	*target_block = block;
 
 	if (block->size == zone_size - HEADER_SIZE) {
+		if (g_heap.tiny_alloc == block || g_heap.small_alloc == block)
+			return (true);
+
 		if (block->prev)
             block->prev->next = block->next;
         else {
